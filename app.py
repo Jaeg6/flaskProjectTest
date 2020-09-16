@@ -27,12 +27,20 @@ def show_user_profile(username):
     # Return specified user page
     return 'User %s' % escape(username)
 
+def valid_login():
+    #riveting functionality here I know
+    return True
+
+# adding additional parameter to route indicating supported HTTP methods
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        return 'do the login'
-    else:
-        return "show the login form"
+        if valid_login():
+            return 'You logged in'
+
+        return 'Invalid login information'
+
+    return 'Nothing here'
 
 
 @app.route('/posts/<int:post_id>')
@@ -52,7 +60,12 @@ with app.test_request_context():
     print(url_for('show_post', post_id=123))
     print(url_for('show_subpath', subpath='path/next'))
 
+# Testing context locals and sending requests with POST method
+with app.test_request_context('/login', method='POST'):
+    assert request.path == '/login'
+    assert request.method == 'POST'
 
+# more request functionality found in login() function
 
 if __name__ == '__main__':
     app.run()
