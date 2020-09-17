@@ -1,5 +1,6 @@
 from flask import Flask, url_for, request, render_template
 from markupsafe import escape
+from bluprnt import bluprnt
 
 app = Flask(__name__)
 
@@ -7,6 +8,11 @@ app = Flask(__name__)
     to indicate a variable surround the variable in <>
     ex. <username> to get an arbitrary username
     to specify the variable's type: <varType:name> where the type is something like a string or int """
+
+# registering the blueprint found in the bluprnt.py file
+# the url_prefix indicates the route prefix before being able to access the routes within the blueprint
+# ex ~/blu won't work, you need to put ~/bp/blu instead
+app.register_blueprint(bluprnt, url_prefix="/bp")
 
 @app.route('/')
 def hello_world():
