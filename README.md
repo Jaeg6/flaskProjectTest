@@ -2,4 +2,5 @@
 Source code I've been creating to assist in learning Flask
 
 Flask Quickstart: https://flask.palletsprojects.com/en/1.1.x/quickstart/#quickstart
+
 Flask Blueprints: https://flask.palletsprojects.com/en/1.1.x/blueprints/
