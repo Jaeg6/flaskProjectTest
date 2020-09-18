@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Hello page{% endblock %}
 {% block content %}
-    <p>Testing</p>
+    <p>Home page</p>
+    {% if usr %}
+        <p>Welcome back, {{ usr }}</p>
+    {% endif %}
 {% endblock %}

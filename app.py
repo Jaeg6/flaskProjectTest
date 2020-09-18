@@ -1,6 +1,7 @@
-from flask import Flask, url_for, request, render_template, redirect, session
+from flask import Flask, url_for, request, render_template, redirect, session, flash
 from markupsafe import escape
 from admin.bluprnt import bluprnt
+from datetime import timedelta
 
 app = Flask(__name__)
 
@@ -14,30 +15,27 @@ app = Flask(__name__)
 # ex ~/blu won't work, you need to put ~/bp/blu instead
 app.register_blueprint(bluprnt, url_prefix="/bp")
 
+# Creating a permanent session example:
+# app.permanent_session_lifetime = timedelta(minutes=5)
+
 # Secret key for session
 app.secret_key = "1234"
 
 @app.route('/')
 def hello_world():
-    return 'Main page'
-
-@app.route('/hello')
-def hello():
-    # render a created html file from "templates" folder
-    return render_template('hello.html')
-
-@app.route('/hello/<user>')
-def hello_user(user):
-    # render template with additional parameters
-    return render_template('hello.html', name=escape(user))
+    if "user" in session:
+        return render_template("home.html", usr=session["user"])
+    else:
+        return render_template("home.html")
 
 @app.route('/user')
 def show_user_profile():
     # Return specified user page
     if "user" in session:
         user = session["user"]
-        return 'User: %s' % user
+        return render_template("user.html", usr=user)
     else:
+        flash("Not logged in!", "info")
         return redirect(url_for("login"))
 
 # adding additional parameter to route indicating supported HTTP methods
@@ -56,8 +54,23 @@ def login():
         return redirect(url_for("show_user_profile"))
     else:
         # GET request, bring user to login page
-        return render_template("login.html")
+        if "user" in session:
+            return redirect(url_for("show_user_profile"))
+        else:
+            return render_template("login.html")
 
+# log user out and remove their session data
+@app.route('/logout')
+def logout():
+    if "user" in session:
+        session.pop("user", None)
+        # Message Flashing
+        flash("Logged out successfully!", "info")
+
+    else:
+        flash("Not logged in!", "info")
+
+    return redirect(url_for("login"))
 
 @app.route('/posts/<int:post_id>')
 def show_post(post_id):
