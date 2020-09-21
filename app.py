@@ -1,7 +1,6 @@
 from flask import Flask, url_for, request, render_template, redirect, session, flash
 from markupsafe import escape
 from admin.bluprnt import bluprnt
-from datetime import timedelta
 
 app = Flask(__name__)
 
@@ -21,14 +20,16 @@ app.register_blueprint(bluprnt, url_prefix="/bp")
 # Secret key for session
 app.secret_key = "1234"
 
-@app.route('/')
+
+@app.route("/")
 def hello_world():
     if "user" in session:
         return render_template("home.html", usr=session["user"])
     else:
         return render_template("home.html")
 
-@app.route('/user')
+
+@app.route("/user")
 def show_user_profile():
     # Return specified user page
     if "user" in session:
@@ -38,10 +39,11 @@ def show_user_profile():
         flash("Not logged in!", "info")
         return redirect(url_for("login"))
 
+
 # adding additional parameter to route indicating supported HTTP methods
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
+    if request.method == "POST":
         # user entered information to text box on the page, get this info
         # request.form will be items found within the form of the html file from the POST request
         user = request.form["nm"]
@@ -59,8 +61,9 @@ def login():
         else:
             return render_template("login.html")
 
+
 # log user out and remove their session data
-@app.route('/logout')
+@app.route("/logout")
 def logout():
     if "user" in session:
         session.pop("user", None)
@@ -72,29 +75,32 @@ def logout():
 
     return redirect(url_for("login"))
 
-@app.route('/posts/<int:post_id>')
+
+@app.route("/posts/<int:post_id>")
 def show_post(post_id):
     # Show post with specified id
-    return 'Post %d' % post_id
+    return "Post %d" % post_id
 
-@app.route('/user/<path:subpath>')
+
+@app.route("/user/<path:subpath>")
 def show_subpath(subpath):
     # Show the subpath after /hello/
-    return 'Subpath %s' % escape(subpath)
+    return "Subpath %s" % escape(subpath)
+
 
 # Printing tests for different paths
 # simulating webapp handling requests
 with app.test_request_context():
-    print(url_for('show_user_profile', username='Jaeg6'))
-    print(url_for('show_post', post_id=123))
-    print(url_for('show_subpath', subpath='path/next'))
+    print(url_for("show_user_profile", username="Jaeg6"))
+    print(url_for("show_post", post_id=123))
+    print(url_for("show_subpath", subpath="path/next"))
 
 # Testing context locals and sending requests with POST method
-with app.test_request_context('/login', method='POST'):
-    assert request.path == '/login'
-    assert request.method == 'POST'
+with app.test_request_context("/login", method="POST"):
+    assert request.path == "/login"
+    assert request.method == "POST"
 
 # more request functionality found in login() function
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()
