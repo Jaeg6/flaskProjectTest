@@ -20,9 +20,12 @@ app.register_blueprint(bluprnt, url_prefix="/bp")
 # Secret key for session
 app.secret_key = "1234"
 
-
 @app.route("/")
 def hello_world():
+    """
+
+    :return: The homepage
+    """
     if "user" in session:
         return render_template("home.html", usr=session["user"])
     else:
@@ -31,6 +34,10 @@ def hello_world():
 
 @app.route("/user")
 def show_user_profile():
+    """
+
+    :return: User's profile if a user is signed in. Else return login page
+    """
     # Return specified user page
     if "user" in session:
         user = session["user"]
@@ -41,8 +48,13 @@ def show_user_profile():
 
 
 # adding additional parameter to route indicating supported HTTP methods
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """
+
+    :return: Login page if no user is signed in. Else return user's account page
+    """
     if request.method == "POST":
         # user entered information to text box on the page, get this info
         # request.form will be items found within the form of the html file from the POST request
@@ -65,6 +77,10 @@ def login():
 # log user out and remove their session data
 @app.route("/logout")
 def logout():
+    """
+
+    :return: User to login page with a message stating they have been signed out
+    """
     if "user" in session:
         session.pop("user", None)
         # Message Flashing
@@ -78,12 +94,22 @@ def logout():
 
 @app.route("/posts/<int:post_id>")
 def show_post(post_id):
+    """
+
+    :param post_id: id to uniquely identify a post
+    :return: post with associated unique id
+    """
     # Show post with specified id
     return "Post %d" % post_id
 
 
 @app.route("/user/<path:subpath>")
 def show_subpath(subpath):
+    """
+
+    :param subpath:
+    :return:
+    """
     # Show the subpath after /hello/
     return "Subpath %s" % escape(subpath)
 

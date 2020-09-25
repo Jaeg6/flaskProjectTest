@@ -9,4 +9,8 @@ bluprnt = Blueprint(
 @bluprnt.route("/blu")
 @bluprnt.route("/")
 def blu():
+    """
+
+    :return: test blueprint
+    """
     return render_template("blueTest.html")
