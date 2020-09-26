@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath('.'))
 # -- Project information -----------------------------------------------------
 
 project = 'flaskProjectTest'
-copyright = '2020, Jacob Gamble'
-author = 'Jacob Gamble'
+copyright = '2020, Jaeg6'
+author = 'Jaeg6'
 
 # The full version, including alpha/beta/rc tags
 release = '1.0'
